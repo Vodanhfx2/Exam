@@ -59,8 +59,8 @@ public class ExamService {
         exam.setLocation(dto.getLocation());
         // Parse String to LocalDateTime for timeslot
         if (dto.getTimeslot() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            exam.setTimeslot(LocalDateTime.parse(dto.getTimeslot(), formatter));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            LocalDateTime.parse(dto.getTimeslot(), formatter);
         } else {
             exam.setTimeslot(null);
         }
