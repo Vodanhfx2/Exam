@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter; // Import for formatting
+import java.time.LocalDateTime;
 
 @Service
 public class ExamService {
@@ -29,7 +31,10 @@ public class ExamService {
         dto.setTitle(exam.getTitle());
         dto.setDurationMinutes(exam.getDurationMinutes());
         dto.setLocation(exam.getLocation());
-        dto.setTimeslot(exam.getTimeslot());
+        // Convert LocalDateTime to String for timeslot
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime timeslot = exam.getTimeslot();
+        dto.setTimeslot(timeslot != null ? timeslot.format(formatter) : null);
         dto.setQuestions(
                 exam.getQuestions() != null
                         ? exam.getQuestions().stream().map(this::toQuestionDto).collect(Collectors.toList())
@@ -52,7 +57,13 @@ public class ExamService {
         exam.setTitle(dto.getTitle());
         exam.setDurationMinutes(dto.getDurationMinutes());
         exam.setLocation(dto.getLocation());
-        exam.setTimeslot(dto.getTimeslot());
+        // Parse String to LocalDateTime for timeslot
+        if (dto.getTimeslot() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            exam.setTimeslot(LocalDateTime.parse(dto.getTimeslot(), formatter));
+        } else {
+            exam.setTimeslot(null);
+        }
         if (dto.getQuestions() != null) {
             List<Question> questions = dto.getQuestions().stream().map(qdto -> {
                 Question q = new Question();

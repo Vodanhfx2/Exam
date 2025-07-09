@@ -19,10 +19,8 @@ public class Exam {
     private String title;
     private Integer durationMinutes;
     private String location;
-
-
     private LocalDateTime timeslot;
 
-    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 }
